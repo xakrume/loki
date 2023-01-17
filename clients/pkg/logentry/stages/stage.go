@@ -37,6 +37,7 @@ const (
 	StageTypeLabelAllow   = "labelallow"
 	StageTypeStaticLabels = "static_labels"
 	StageTypeDecolorize   = "decolorize"
+	StageTypeConversion   = "conversion"
 )
 
 // Processor takes an existing set of labels, timestamp and log entry and returns either a possibly mutated
@@ -215,6 +216,11 @@ func New(logger log.Logger, jobName *string, stageType string,
 		if err != nil {
 			return nil, err
 		}
+        case StageTypeConversion:
+                s, err = conversion.NewConversion(cfg)
+                if err != nil {
+                        return nil, errors.Wrap(err, "failed to create new conversion stage")
+                }
 	default:
 		return nil, errors.Errorf("Unknown stage type: %s", stageType)
 	}
